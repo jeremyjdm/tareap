@@ -9,7 +9,7 @@ if (!isset($_SESSION['perfil']) || !in_array($_SESSION['perfil'], ['Root', 'gere
 
 $servername = "localhost";
 $username = "root";
-$password = "root";
+$password = "root1";
 $dbname = "bdtienda";
 
 // Crear conexión
