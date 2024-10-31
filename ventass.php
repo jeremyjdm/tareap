@@ -7,7 +7,7 @@ if ($_SESSION['perfil'] !== 'secretaria') {
 
 $servername = "localhost";
 $username = "root";
-$password = "root";
+$password = "root1";
 $dbname = "bdtienda";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
