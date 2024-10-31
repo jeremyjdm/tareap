@@ -9,7 +9,7 @@ error_reporting(E_ALL);
 // Conexión a la base de datos
 $host = "localhost";
 $user = "root"; // Cambiar si es necesario
-$pass = "root"; // Cambiar si es necesario
+$pass = "root1"; // Cambiar si es necesario
 $dbname = "bdtienda";
 
 $conn = new mysqli($host, $user, $pass, $dbname);
