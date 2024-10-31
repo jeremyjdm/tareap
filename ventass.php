@@ -1,4 +1,10 @@
 <?php
+session_start();
+if ($_SESSION['perfil'] !== 'secretaria') {
+    header("Location: login.php");
+    exit();
+}
+
 $servername = "localhost";
 $username = "root";
 $password = "root";
@@ -59,37 +65,66 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Ventas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
         }
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-            padding: 8px;
+        h2 {
+            color: #007BFF;
+            text-align: center;
+            margin-bottom: 20px;
         }
         table {
             width: 100%;
-            margin-bottom: 16px;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #007BFF;
+            color: white;
         }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-width: 300px;
+        tr:hover {
+            background-color: #f1f1f1;
         }
         .button-container {
-            margin-bottom: 16px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .no-data {
+            text-align: center;
+            font-style: italic;
+            color: #777;
         }
     </style>
 </head>
 <body>
 
     <h2>Gestión de Ventas</h2>
+
     <table>
         <thead>
             <tr>
@@ -101,41 +136,29 @@ $conn->close();
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($ventas as $venta): ?>
+            <?php if (!empty($ventas)): ?>
+                <?php foreach ($ventas as $venta): ?>
+                    <tr>
+                        <td><?= $venta['id_venta'] ?></td>
+                        <td><?= htmlspecialchars($venta['nombre_cliente']) ?></td>
+                        <td><?= $venta['fecha'] ?></td>
+                        <td><?= htmlspecialchars($venta['metodo_pago']) ?></td>
+                        <td>$<?= number_format($venta['total'], 2) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
                 <tr>
-                    <td><?= $venta['id_venta'] ?></td>
-                    <td><?= htmlspecialchars($venta['nombre_cliente']) ?></td>
-                    <td><?= $venta['fecha'] ?></td>
-                    <td><?= htmlspecialchars($venta['metodo_pago']) ?></td>
-                    <td>$<?= number_format($venta['total'], 2) ?></td>
+                    <td colspan="5" class="no-data">No hay ventas registradas.</td>
                 </tr>
-            <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
     </table>
 
-    <h3>Agregar Venta</h3>
-    <form method="post">
-        <label for="id_cliente">Cliente:</label>
-        <select name="id_cliente" id="id_cliente" required>
-            <?php foreach ($clientes as $cliente): ?>
-                <option value="<?= $cliente['id_cliente'] ?>"><?= htmlspecialchars($cliente['nombre']) ?></option>
-            <?php endforeach; ?>
-        </select>
-
-        <label for="id_metodo_pago">Método de Pago:</label>
-        <select name="id_metodo_pago" id="id_metodo_pago" required>
-            <?php foreach ($metodos_pago as $metodo): ?>
-                <option value="<?= $metodo['id_metodo_pago'] ?>"><?= htmlspecialchars($metodo['tipo_pago']) ?></option>
-            <?php endforeach; ?>
-        </select>
-
-        <input type="number" name="total" placeholder="Total" required min="0" step="0.01">
-        <button type="submit" name="agregar">Agregar Venta</button>
-    </form>
-
-    <form action="homes.php" method="POST"> <!-- Acción para regresar -->
-        <button type="submit">Regresar</button> 
-    </form>
+    <div class="button-container">
+        <form action="homes.php" method="POST"> <!-- Acción para regresar -->
+            <button type="submit">Regresar</button> 
+        </form>
+    </div>
 
 </body>
 </html>

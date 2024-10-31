@@ -1,4 +1,10 @@
 <?php
+session_start();
+if ($_SESSION['perfil'] !== 'secretaria') {
+    header("Location: login.php");
+    exit();
+}
+
 $servername = "localhost";
 $username = "root";
 $password = "root";
@@ -53,62 +59,128 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Métodos de Pago</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
         }
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-            padding: 8px;
+        h2 {
+            color: #007BFF;
+            text-align: center;
         }
         table {
             width: 100%;
-            margin-bottom: 16px;
+            margin: 20px 0;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #007BFF;
+            color: white;
         }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-width: 300px;
+        tr:hover {
+            background-color: #f1f1f1;
         }
         .button-container {
-            margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #218838;
         }
     </style>
 </head>
 <body>
 
     <h2>Gestión de Métodos de Pago</h2>
+
+    <div class="form-container">
+        <form method="POST">
+            <input type="text" name="tipo_pago" placeholder="Agregar nuevo método de pago" required>
+            <input type="submit" name="agregar" value="Agregar">
+        </form>
+    </div>
+
     <table>
         <thead>
             <tr>
                 <th>ID Método</th>
                 <th>Tipo de Pago</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             <?php if (empty($metodos_pago)): ?>
                 <tr>
-                    <td colspan="3">No hay métodos de pago disponibles.</td>
+                    <td colspan="3" style="text-align: center;">No hay métodos de pago disponibles.</td>
                 </tr>
             <?php else: ?>
                 <?php foreach ($metodos_pago as $metodo): ?>
                     <tr>
                         <td><?= $metodo['id_metodo_pago'] ?></td>
                         <td><?= htmlspecialchars($metodo['tipo_pago']) ?></td>
+                        <td>
+                            <form style="display:inline;" method="POST">
+                                <input type="hidden" name="id_metodo_pago" value="<?= $metodo['id_metodo_pago'] ?>">
+                                <input type="submit" name="eliminar" value="Eliminar" style="background-color: #dc3545;">
+                            </form>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>
         </tbody>
     </table>
-    <form action="homes.php" method="POST"> <!-- Acción para regresar -->
-        <button type="submit">Regresar</button> 
-    </form>
+    
+    <div class="button-container">
+        <form action="homes.php" method="POST"> <!-- Acción para regresar -->
+            <button type="submit">Regresar</button> 
+        </form>
+    </div>
 
 </body>
 </html>

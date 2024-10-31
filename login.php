@@ -78,8 +78,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Login - basetienda</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+            background-color: #e9ecef;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -88,24 +88,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         .login-container {
-            background-color: #fff;
-            border-radius: 10px;
+            background-color: #ffffff;
+            border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             padding: 40px;
-            width: 300px;
+            width: 350px;
             text-align: center;
         }
 
         h2 {
             margin-bottom: 20px;
-            color: #333;
+            color: #495057;
         }
 
         label {
             display: block;
             margin-bottom: 5px;
             text-align: left;
-            color: #555;
+            color: #495057;
         }
 
         input[type="text"],
@@ -114,13 +114,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
             box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            border-color: #80bdff;
+            outline: none;
         }
 
         input[type="submit"] {
-            background-color: #5cb85c;
+            background-color: #007bff;
             color: white;
             border: none;
             padding: 10px;
@@ -130,7 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         input[type="submit"]:hover {
-            background-color: #4cae4c;
+            background-color: #0056b3;
         }
 
         .error {

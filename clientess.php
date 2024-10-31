@@ -1,4 +1,10 @@
 <?php
+session_start();
+if ($_SESSION['perfil'] !== 'secretaria') {
+    header("Location: login.php");
+    exit();
+}
+
 $servername = "localhost";
 $username = "root";
 $password = "root";
@@ -56,31 +62,49 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Clientes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 20px;
+            background-color: #f9f9f9;
         }
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-            padding: 8px;
+        h2 {
+            color: #333;
         }
         table {
             width: 100%;
             margin-bottom: 16px;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #007BFF;
+            color: white;
         }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-width: 300px;
+        tr:hover {
+            background-color: #f1f1f1;
         }
         .button-container {
-            margin-bottom: 16px;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -98,22 +122,29 @@ $conn->close();
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($clientes as $cliente): ?>
+            <?php if (empty($clientes)): ?>
                 <tr>
-                    <td><?= $cliente['id_cliente'] ?></td>
-                    <td><?= htmlspecialchars($cliente['nombre']) ?></td>
-                    <td><?= htmlspecialchars($cliente['email']) ?></td>
-                    <td><?= htmlspecialchars($cliente['telefono']) ?></td>
-                    <td><?= htmlspecialchars($cliente['direccion']) ?></td>
-                    <td>
-                    </td>
+                    <td colspan="5">No hay clientes disponibles.</td>
                 </tr>
-            <?php endforeach; ?>
+            <?php else: ?>
+                <?php foreach ($clientes as $cliente): ?>
+                    <tr>
+                        <td><?= $cliente['id_cliente'] ?></td>
+                        <td><?= htmlspecialchars($cliente['nombre']) ?></td>
+                        <td><?= htmlspecialchars($cliente['email']) ?></td>
+                        <td><?= htmlspecialchars($cliente['telefono']) ?></td>
+                        <td><?= htmlspecialchars($cliente['direccion']) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
     </table>
-    <form action="homes.php" method="POST"> <!-- Acción para regresar -->
-        <button type="submit">Regresar</button> 
-    </form>
+    
+    <div class="button-container">
+        <form action="homes.php" method="POST"> <!-- Acción para regresar -->
+            <button type="submit">Regresar</button> 
+        </form>
+    </div>
 
 </body>
 </html>

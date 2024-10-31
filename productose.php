@@ -1,4 +1,10 @@
 <?php
+session_start();
+if ($_SESSION['perfil'] !== 'Empleado') {
+    header("Location: login.php");
+    exit();
+}
+
 $servername = "localhost";
 $username = "root";
 $password = "root";
@@ -48,10 +54,6 @@ $query = "
 ";
 $result = $conn->query($query);
 $productos = $result->fetch_all(MYSQLI_ASSOC);
-
-// Obtener todas las categorías y proveedores para el formulario
-$categorias = $conn->query("SELECT * FROM categorias")->fetch_all(MYSQLI_ASSOC);
-$proveedores = $conn->query("SELECT * FROM proveedores")->fetch_all(MYSQLI_ASSOC);
 $conn->close();
 ?>
 
@@ -61,37 +63,66 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Productos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
         }
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-            padding: 8px;
+        h2 {
+            color: #007BFF;
+            text-align: center;
+            margin-bottom: 20px;
         }
         table {
             width: 100%;
-            margin-bottom: 16px;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #007BFF;
+            color: white;
         }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-width: 300px;
+        tr:hover {
+            background-color: #f1f1f1;
         }
         .button-container {
-            margin-bottom: 16px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .no-data {
+            text-align: center;
+            font-style: italic;
+            color: #777;
         }
     </style>
 </head>
 <body>
 
     <h2>Gestión de Productos</h2>
+
     <table>
         <thead>
             <tr>
@@ -105,22 +136,31 @@ $conn->close();
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($productos as $producto): ?>
+            <?php if (!empty($productos)): ?>
+                <?php foreach ($productos as $producto): ?>
+                    <tr>
+                        <td><?= $producto['id_producto'] ?></td>
+                        <td><?= htmlspecialchars($producto['nombre']) ?></td>
+                        <td><?= htmlspecialchars($producto['descripcion']) ?></td>
+                        <td>$<?= number_format($producto['precio'], 2) ?></td>
+                        <td><?= $producto['stock'] ?></td>
+                        <td><?= htmlspecialchars($producto['nombre_categoria']) ?></td>
+                        <td><?= htmlspecialchars($producto['nombre_proveedor']) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
                 <tr>
-                    <td><?= $producto['id_producto'] ?></td>
-                    <td><?= htmlspecialchars($producto['nombre']) ?></td>
-                    <td><?= htmlspecialchars($producto['descripcion']) ?></td>
-                    <td>$<?= number_format($producto['precio'], 2) ?></td>
-                    <td><?= $producto['stock'] ?></td>
-                    <td><?= htmlspecialchars($producto['nombre_categoria']) ?></td>
-                    <td><?= htmlspecialchars($producto['nombre_proveedor']) ?></td>
+                    <td colspan="7" class="no-data">No hay productos registrados.</td>
                 </tr>
-            <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
     </table>
-    <form action="homee.php" method="POST"> <!-- Acción para regresar -->
-        <button type="submit">Regresar</button> 
-    </form>
+
+    <div class="button-container">
+        <form action="homee.php" method="POST"> <!-- Acción para regresar -->
+            <button type="submit">Regresar</button> 
+        </form>
+    </div>
 
 </body>
 </html>
